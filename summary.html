@@ -48,8 +48,14 @@
     };
 
     const scores = [Number(params.get('score1')), Number(params.get('score2'))];
-    if (scores[0] !== scores[1]) {
-      const loser = scores[0] < scores[1] ? 0 : 1;
+    const goals = [Number(params.get('goal1')), Number(params.get('goal2'))];
+    const reached = scores.map((s, i) => s >= goals[i]);
+    // The winner is whoever reached their goal; otherwise whoever is ahead.
+    let winner = null;
+    if (reached[0] !== reached[1]) winner = reached[0] ? 0 : 1;
+    else if (scores[0] !== scores[1]) winner = scores[0] > scores[1] ? 0 : 1;
+    if (winner !== null) {
+      const loser = 1 - winner;
       const bounds = SPLIT_BOUNDS[params.get(`skill${loser + 1}`)];
       if (bounds) {
         const row = bounds.findLastIndex(min => scores[loser] >= min);

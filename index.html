@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Project</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav id="circles"></nav>
+  <div id="players">
+    <input type="text" id="player1" value="Player1" placeholder="Player 1" aria-label="Player 1 name">
+    <input type="text" id="sl" value="SL1:14" data-level="1" data-goal="14" readonly aria-label="SL">
+    <input type="text" id="sl2" value="SL1:14" data-level="1" data-goal="14" readonly aria-label="Player 2 SL">
+    <input type="text" id="player2" value="Player2" placeholder="Player 2" aria-label="Player 2 name">
+  </div>
+  <div id="scores">
+    <input type="number" id="score1" value="0" min="0" aria-label="Player 1 score">
+    <div class="labeled"><span>Def:</span><input type="number" id="def" value="0" min="0" aria-label="Def"></div>
+    <div class="labeled"><span>Def:</span><input type="number" id="def2" value="0" min="0" aria-label="Player 2 Def"></div>
+    <input type="number" id="score2" value="0" min="0" aria-label="Player 2 score">
+    <div class="labeled" id="time-field"><span>Time:</span><input type="number" id="time" value="2" min="0" aria-label="Player 1 Time"></div>
+    <div class="labeled" id="time2-field"><span>Time:</span><input type="number" id="time2" value="2" min="0" aria-label="Player 2 Time"></div>
+  </div>
+  <div id="bottom">
+    <input type="text" id="bl1" value="BL" readonly aria-label="BL">
+    <input type="text" id="dead-t" value="DeadT" readonly aria-label="DeadT">
+    <input type="text" id="dead" value="Dead" readonly aria-label="Dead">
+    <input type="text" id="r-inn" value="R-Inn" readonly aria-label="R-Inn">
+    <input type="text" id="t-inn" value="T-Inn" readonly aria-label="T-Inn">
+    <input type="text" id="bl2" value="BL" readonly aria-label="BL">
+  </div>
+  <div id="actions">
+    <button type="button" id="help">Help</button>
+    <button type="button" id="new-game">NewGame</button>
+    <button type="button" id="summary">Summary</button>
+    <button type="button" id="switch-player">SwitchPlayer</button>
+  </div>
+  <dialog id="confirm-dialog">
+    <p id="confirm-message"></p>
+    <form method="dialog">
+      <button value="yes">Yes</button>
+      <button value="no">No</button>
+    </form>
+  </dialog>
+  <script src="script.js"></script>
+</body>
+</html>

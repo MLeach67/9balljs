@@ -1,0 +1,196 @@
+body {
+  background: #50A6C2;
+  font-family: system-ui, sans-serif;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#circles {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+#circles button {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--ball);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: inset -4px -4px 8px rgba(0, 0, 0, 0.35), inset 3px 3px 6px rgba(255, 255, 255, 0.4);
+}
+
+#circles button:nth-child(1) { --ball: #f5c400; color: #000; }
+#circles button:nth-child(2) { --ball: #0a4fb5; }
+#circles button:nth-child(3) { --ball: #d62828; }
+#circles button:nth-child(4) { --ball: #5b2a86; }
+#circles button:nth-child(5) { --ball: #f57c00; }
+#circles button:nth-child(6) { --ball: #1b8a3a; }
+#circles button:nth-child(7) { --ball: #7a1f1f; }
+#circles button:nth-child(8) { --ball: #111; }
+#circles button:nth-child(9) {
+  --ball: linear-gradient(#fff 0 25%, #f5c400 25% 75%, #fff 75%);
+  color: #000;
+}
+
+#players,
+#scores {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.5fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#players input,
+#players select,
+#scores input {
+  min-width: 0;
+  box-sizing: border-box;
+  height: 2.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+#scores #score1,
+#scores #score2 {
+  grid-row: 1 / span 2;
+  height: auto;
+  align-self: stretch;
+}
+
+#scores {
+  align-items: start;
+}
+
+#score2 {
+  grid-column: 4;
+}
+
+#time-field {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+#time2-field {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+#bottom {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#bottom input {
+  min-width: 0;
+  box-sizing: border-box;
+  height: 2.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+#score1,
+#score2 {
+  appearance: textfield;
+}
+
+#score1::-webkit-inner-spin-button,
+#score1::-webkit-outer-spin-button,
+#score2::-webkit-inner-spin-button,
+#score2::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+#actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#actions button {
+  height: 2.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#circles button.pocketed {
+  --ball: #999;
+  color: #fff;
+  cursor: default;
+}
+
+#circles button {
+  position: relative;
+}
+
+#circles button.crossed::after {
+  content: "✕";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+#circles button.frozen {
+  cursor: not-allowed;
+}
+
+.labeled {
+  position: relative;
+  height: 2.5rem;
+}
+
+.labeled span {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+#scores .labeled input {
+  width: 100%;
+  padding-left: 2.25rem;
+  text-align: center;
+}
+
+#players input,
+#players select,
+#scores input {
+  text-align: center;
+  text-align-last: center;
+}
+
+#summary {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+#summary th,
+#summary td {
+  border: 1px solid #333;
+  padding: 0.5rem;
+}
+
+#back {
+  display: block;
+  width: 100%;
+  height: 2.5rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}

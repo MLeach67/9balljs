@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Summary</h1>
+  <table id="summary">
+    <thead>
+      <tr><th></th><th id="sum-name1"></th><th id="sum-name2"></th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Score</th><td id="sum-score1"></td><td id="sum-score2"></td></tr>
+      <tr><th>Skill</th><td id="sum-skill1"></td><td id="sum-skill2"></td></tr>
+      <tr><th>Goal</th><td id="sum-goal1"></td><td id="sum-goal2"></td></tr>
+      <tr><th>Def</th><td id="sum-def1"></td><td id="sum-def2"></td></tr>
+      <tr><th>DeadT</th><td colspan="2" id="sum-deadt"></td></tr>
+      <tr><th>Split</th><td id="sum-split1"></td><td id="sum-split2"></td></tr>
+      <tr><th>T-Inn</th><td colspan="2" id="sum-tinn"></td></tr>
+    </tbody>
+  </table>
+  <button type="button" id="back" onclick="history.back()">Back</button>
+  <script>
+    const params = new URLSearchParams(location.search);
+    for (const key of ['name', 'score', 'skill', 'goal', 'def']) {
+      for (const n of [1, 2]) {
+        document.getElementById(`sum-${key}${n}`).textContent = params.get(`${key}${n}`) ?? '';
+      }
+    }
+    for (const key of ['deadt', 'tinn']) {
+      document.getElementById(`sum-${key}`).textContent = params.get(key) ?? '';
+    }
+
+    // Lowest loser score for each split row; row i gives winner 20 - i, loser i.
+    const SPLIT_BOUNDS = {
+      1: [0, 3, 4, 5, 7, 8, 9, 11, 12],
+      2: [0, 4, 6, 8, 9, 11, 13, 15, 17],
+      3: [0, 5, 7, 10, 12, 15, 17, 20, 22],
+      4: [0, 6, 9, 12, 15, 19, 22, 25, 28],
+      5: [0, 7, 11, 15, 19, 23, 27, 30, 34],
+      6: [0, 9, 13, 18, 23, 28, 32, 37, 41],
+      7: [0, 11, 16, 22, 27, 33, 38, 44, 50],
+      8: [0, 14, 20, 27, 33, 40, 46, 53, 59],
+      9: [0, 18, 25, 32, 39, 47, 54, 61, 68],
+    };
+
+    const scores = [Number(params.get('score1')), Number(params.get('score2'))];
+    if (scores[0] !== scores[1]) {
+      const loser = scores[0] < scores[1] ? 0 : 1;
+      const bounds = SPLIT_BOUNDS[params.get(`skill${loser + 1}`)];
+      if (bounds) {
+        const row = bounds.findLastIndex(min => scores[loser] >= min);
+        document.getElementById(`sum-split${2 - loser}`).textContent = 20 - row;
+        document.getElementById(`sum-split${loser + 1}`).textContent = row;
+      }
+    }
+  </script>
+</body>
+</html>

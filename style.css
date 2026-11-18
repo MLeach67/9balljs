@@ -6,6 +6,10 @@ body {
   padding: 0 1rem;
 }
 
+button {
+  font-family: inherit;
+}
+
 #circles {
   display: flex;
   justify-content: space-between;
@@ -62,6 +66,7 @@ body {
   grid-row: 1 / span 2;
   height: auto;
   align-self: stretch;
+  font-size: 2.5rem;
 }
 
 #scores {
@@ -84,7 +89,7 @@ body {
 
 #bottom {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: 1.5625fr 1fr 1.5625fr 1fr 1fr 1.5625fr;
   gap: 1rem;
   margin-top: 1rem;
 }
@@ -97,9 +102,32 @@ body {
   font-size: 1rem;
 }
 
+#bottom #bl1,
+#bottom #bl2 {
+  font-size: 0.75rem;
+}
+
+#scores #def,
+#scores #def2,
+#scores #time,
+#scores #time2,
+#bottom #dead-t,
+#bottom #dead,
+#bottom #r-inn,
+#bottom #t-inn,
+.labeled span {
+  font-size: 0.75rem;
+}
+
 #score1,
 #score2 {
   appearance: textfield;
+}
+
+#score1.inactive,
+#score2.inactive {
+  filter: grayscale(1);
+  opacity: 0.6;
 }
 
 #score1::-webkit-inner-spin-button,
@@ -196,6 +224,24 @@ body {
   margin-top: 1rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+dialog {
+  width: 20rem;
+  max-width: 90vw;
+  min-height: 8rem;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+dialog p {
+  text-align: center;
+}
+
+dialog form {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 @media (max-width: 480px) {

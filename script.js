@@ -15,18 +15,22 @@ let deadR = 0;
 let rInn = 0;
 let tInn = 0;
 
+function updateActiveScore() {
+  players.forEach((p, i) => p.score.classList.toggle('inactive', i !== active));
+}
+
 function updateBL(p) {
-  p.bl.value = p.blBalls.length ? `BL ${p.blBalls.join(',')}` : 'BL';
+  p.bl.value = p.blBalls.length ? `BL:${p.blBalls.join(',')}` : 'BL:';
 }
 
 function updateDead() {
-  document.getElementById('dead-t').value = deadR ? `DeadT ${deadR}` : 'DeadT';
-  document.getElementById('dead').value = deadBalls.length ? `Dead ${[...deadBalls].sort((a, b) => a - b).join(',')}` : 'Dead';
+  document.getElementById('dead-t').value = deadR ? `DT:${deadR}` : 'DT:';
+  document.getElementById('dead').value = deadBalls.length ? `DL:${[...deadBalls].sort((a, b) => a - b).join(',')}` : 'DL:';
 }
 
 function updateInnings() {
-  document.getElementById('r-inn').value = rInn ? `R-Inn ${rInn}` : 'R-Inn';
-  document.getElementById('t-inn').value = tInn ? `T-Inn ${tInn}` : 'T-Inn';
+  document.getElementById('r-inn').value = rInn ? `R-Inn:${rInn}` : 'R-Inn:';
+  document.getElementById('t-inn').value = tInn ? `T-Inn:${tInn}` : 'T-Inn:';
 }
 
 function removeBall(list, ball) {
@@ -124,6 +128,7 @@ function newGame() {
   deadR = 0;
   rInn = 0;
   tInn = 0;
+  updateActiveScore();
 }
 
 function goToSummary() {
@@ -180,6 +185,7 @@ document.getElementById('switch-player').addEventListener('click', () => {
     tInn++;
     updateInnings();
   }
+  updateActiveScore();
 });
 
 for (const ball of [...circles.children].slice(0, 8)) {
@@ -216,7 +222,7 @@ for (const ball of [...circles.children].slice(0, 8)) {
 const STATE_KEY = 'gameState';
 
 function saveState() {
-  sessionStorage.setItem(STATE_KEY, JSON.stringify({
+  localStorage.setItem(STATE_KEY, JSON.stringify({
     deadBalls,
     blBalls: players.map(p => p.blBalls),
     active,
@@ -232,7 +238,7 @@ function saveState() {
 }
 
 function restoreState() {
-  const saved = sessionStorage.getItem(STATE_KEY);
+  const saved = localStorage.getItem(STATE_KEY);
   if (!saved) return;
   const s = JSON.parse(saved);
   deadBalls.push(...s.deadBalls);
@@ -252,8 +258,10 @@ function restoreState() {
     circles.children[i].className = b.classes.join(' ');
     if (b.owner !== undefined) circles.children[i].dataset.owner = b.owner;
   });
+  updateActiveScore();
 }
 
-// Coming back from the summary page reloads this script, so rebuild the game from storage.
-if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') restoreState();
+// Restore from storage so the game survives page reloads or the browser closing.
+if (localStorage.getItem(STATE_KEY)) restoreState();
+else updateActiveScore();
 window.addEventListener('pagehide', saveState);

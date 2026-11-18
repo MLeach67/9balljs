@@ -38,7 +38,7 @@ function removeBall(list, ball) {
   if (i !== -1) list.splice(i, 1);
 }
 
-const SKILL_GOALS = { 1: 14, 2: 19, 3: 25, 4: 31, 5: 38, 6: 48, 7: 55, 8: 65, 9: 75 };
+const SKILL_GOALS = { 1: 14, 2: 19, 3: 25, 4: 31, 5: 38, 6: 46, 7: 55, 8: 65, 9: 75 };
 
 const defaultTime = level => (level <= 3 ? 2 : 1);
 
@@ -140,6 +140,9 @@ function newGame() {
 }
 
 function goToSummary() {
+  [...circles.children].forEach((ball, i) => {
+    if (!ball.classList.contains('pocketed') && !ball.classList.contains('crossed')) deadR += i === 8 ? 2 : 1;
+  });
   const params = new URLSearchParams();
   players.forEach((p, i) => {
     const n = i + 1;
@@ -179,7 +182,7 @@ function newRack() {
 document.getElementById('summary').addEventListener('click', goToSummary);
 
 document.getElementById('new-game').addEventListener('click', () => {
-  confirmAction('Start a new game? All fields will be reset.', newGame);
+  confirmAction('Start a new game?', newGame);
 });
 
 circles.children[8].addEventListener('click', () => confirmAction('New Rack?', newRack));

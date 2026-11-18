@@ -60,6 +60,7 @@ function pickSkill(input) {
     input.value = `SL${select.value}:${input.dataset.goal}`;
     setButtonValue(document.getElementById(input.id === 'sl' ? 'time' : 'time2'), defaultTime(select.value));
     done();
+    saveState();
   });
   select.addEventListener('blur', done);
 
@@ -104,13 +105,19 @@ function setButtonValue(button, value) {
 const defButtons = [document.getElementById('def'), document.getElementById('def2')];
 
 for (const button of defButtons) {
-  button.addEventListener('click', () => setButtonValue(button, Number(button.dataset.value) + 1));
+  button.addEventListener('click', () => {
+    setButtonValue(button, Number(button.dataset.value) + 1);
+    saveState();
+  });
 }
 
 const timeButtons = [document.getElementById('time'), document.getElementById('time2')];
 
 for (const button of timeButtons) {
-  button.addEventListener('click', () => setButtonValue(button, Math.max(0, Number(button.dataset.value) - 1)));
+  button.addEventListener('click', () => {
+    setButtonValue(button, Math.max(0, Number(button.dataset.value) - 1));
+    saveState();
+  });
 }
 
 const KEPT_ON_NEW_GAME = ['player1', 'player2', 'sl', 'sl2'];
@@ -129,6 +136,7 @@ function newGame() {
   rInn = 0;
   tInn = 0;
   updateActiveScore();
+  saveState();
 }
 
 function goToSummary() {
@@ -165,6 +173,7 @@ function newRack() {
   updateInnings();
   resetBalls();
   checkGoal(p);
+  saveState();
 }
 
 document.getElementById('summary').addEventListener('click', goToSummary);
@@ -186,6 +195,7 @@ document.getElementById('switch-player').addEventListener('click', () => {
     updateInnings();
   }
   updateActiveScore();
+  saveState();
 });
 
 for (const ball of [...circles.children].slice(0, 8)) {
@@ -198,6 +208,7 @@ for (const ball of [...circles.children].slice(0, 8)) {
       removeBall(deadBalls, ball.textContent);
       deadR--;
       updateDead();
+      saveState();
       return;
     }
     if (ball.classList.contains('pocketed')) {
@@ -208,6 +219,7 @@ for (const ball of [...circles.children].slice(0, 8)) {
       updateDead();
       removeBall(p.blBalls, ball.textContent);
       updateBL(p);
+      saveState();
       return;
     }
     ball.classList.add('pocketed');
@@ -216,6 +228,7 @@ for (const ball of [...circles.children].slice(0, 8)) {
     p.blBalls.push(ball.textContent);
     updateBL(p);
     checkGoal(p);
+    saveState();
   });
 }
 
@@ -264,4 +277,5 @@ function restoreState() {
 // Restore from storage so the game survives page reloads or the browser closing.
 if (localStorage.getItem(STATE_KEY)) restoreState();
 else updateActiveScore();
+document.addEventListener('input', saveState);
 window.addEventListener('pagehide', saveState);

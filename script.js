@@ -54,7 +54,7 @@ function pickSkill(input) {
     input.dataset.level = select.value;
     input.dataset.goal = SKILL_GOALS[select.value];
     input.value = `SL${select.value}:${input.dataset.goal}`;
-    document.getElementById(input.id === 'sl' ? 'time' : 'time2').value = defaultTime(select.value);
+    setButtonValue(document.getElementById(input.id === 'sl' ? 'time' : 'time2'), defaultTime(select.value));
     done();
   });
   select.addEventListener('blur', done);
@@ -92,13 +92,31 @@ confirmDialog.addEventListener('close', () => {
   if (confirmDialog.returnValue === 'yes') onConfirm();
 });
 
+function setButtonValue(button, value) {
+  button.dataset.value = value;
+  button.textContent = value;
+}
+
+const defButtons = [document.getElementById('def'), document.getElementById('def2')];
+
+for (const button of defButtons) {
+  button.addEventListener('click', () => setButtonValue(button, Number(button.dataset.value) + 1));
+}
+
+const timeButtons = [document.getElementById('time'), document.getElementById('time2')];
+
+for (const button of timeButtons) {
+  button.addEventListener('click', () => setButtonValue(button, Math.max(0, Number(button.dataset.value) - 1)));
+}
+
 const KEPT_ON_NEW_GAME = ['player1', 'player2', 'sl', 'sl2'];
 
 function newGame() {
   for (const input of document.querySelectorAll('input')) {
     if (!KEPT_ON_NEW_GAME.includes(input.id)) input.value = input.defaultValue;
   }
-  for (const p of players) p.time.value = defaultTime(p.sl.dataset.level);
+  for (const button of defButtons) setButtonValue(button, 0);
+  for (const p of players) setButtonValue(p.time, defaultTime(p.sl.dataset.level));
   resetBalls();
   deadBalls.length = 0;
   for (const p of players) p.blBalls.length = 0;
@@ -116,7 +134,7 @@ function goToSummary() {
     params.set(`score${n}`, p.score.value);
     params.set(`skill${n}`, p.sl.dataset.level);
     params.set(`goal${n}`, p.sl.dataset.goal);
-    params.set(`def${n}`, document.getElementById(i ? 'def2' : 'def').value);
+    params.set(`def${n}`, defButtons[i].dataset.value);
   });
   params.set('deadt', deadR);
   params.set('tinn', tInn);
@@ -133,7 +151,7 @@ function newRack() {
   for (const q of players) {
     q.blBalls.length = 0;
     updateBL(q);
-    q.time.value = defaultTime(q.sl.dataset.level);
+    setButtonValue(q.time, defaultTime(q.sl.dataset.level));
   }
   deadBalls.length = 0;
   deadR += [...circles.children].slice(0, 8).filter(b => !b.classList.contains('pocketed') && !b.classList.contains('crossed')).length;
@@ -206,6 +224,8 @@ function saveState() {
     rInn,
     tInn,
     inputs: Object.fromEntries([...document.querySelectorAll('input')].map(i => [i.id, i.value])),
+    def: defButtons.map(b => b.dataset.value),
+    time: timeButtons.map(b => b.dataset.value),
     sl: players.map(p => ({ level: p.sl.dataset.level, goal: p.sl.dataset.goal })),
     balls: [...circles.children].map(b => ({ classes: [...b.classList], owner: b.dataset.owner })),
   }));
@@ -226,6 +246,8 @@ function restoreState() {
   rInn = s.rInn;
   tInn = s.tInn;
   for (const [id, value] of Object.entries(s.inputs)) document.getElementById(id).value = value;
+  s.def.forEach((value, i) => setButtonValue(defButtons[i], value));
+  s.time.forEach((value, i) => setButtonValue(timeButtons[i], value));
   s.balls.forEach((b, i) => {
     circles.children[i].className = b.classes.join(' ');
     if (b.owner !== undefined) circles.children[i].dataset.owner = b.owner;

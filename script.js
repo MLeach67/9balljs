@@ -139,10 +139,12 @@ function newGame() {
   saveState();
 }
 
-function goToSummary() {
-  [...circles.children].forEach((ball, i) => {
-    if (!ball.classList.contains('pocketed') && !ball.classList.contains('crossed')) deadR += i === 8 ? 2 : 1;
-  });
+function goToSummary(tallyDead) {
+  if (tallyDead) {
+    [...circles.children].forEach((ball, i) => {
+      if (!ball.classList.contains('pocketed') && !ball.classList.contains('crossed')) deadR += i === 8 ? 2 : 1;
+    });
+  }
   const params = new URLSearchParams();
   players.forEach((p, i) => {
     const n = i + 1;
@@ -157,8 +159,8 @@ function goToSummary() {
   location.href = `summary.html?${params}`;
 }
 
-function checkGoal(p) {
-  if (Number(p.score.value) >= Number(p.sl.dataset.goal)) confirmAction('Confirm end of game?', goToSummary);
+function checkGoal(p, tallyDead = true) {
+  if (Number(p.score.value) >= Number(p.sl.dataset.goal)) confirmAction('Confirm end of game?', () => goToSummary(tallyDead));
 }
 
 function newRack() {
@@ -175,11 +177,11 @@ function newRack() {
   updateDead();
   updateInnings();
   resetBalls();
-  checkGoal(p);
+  checkGoal(p, false);
   saveState();
 }
 
-document.getElementById('summary').addEventListener('click', goToSummary);
+document.getElementById('summary').addEventListener('click', () => goToSummary(true));
 
 document.getElementById('new-game').addEventListener('click', () => {
   confirmAction('Start a new game?', newGame);
